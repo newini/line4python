@@ -10,18 +10,19 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TemplateSendMessage, CarouselTemplate, CarouselColumn)
 
+import pya3rt # CURL
+
 app = Flask(__name__)
 
+# Line messange api
 LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
 LINE_CHANNEL_SECRET = os.environ["LINE_CHANNEL_SECRET"]
-
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
-
-@app.route("/index", methods=['GET'])
-def index():
-        return 'OK'
+# Talk api
+TALKAPI_KEY = os.environ["TALKAPI_KEY"]
+client = pya3rt.TalkClient(TALKAPI_KEY)
 
 
 @app.route("/callback", methods=['POST'])
@@ -44,23 +45,27 @@ def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
 
+    print(event)
+
     # notesのCarouselColumnの各値は、変更してもらって結構です。
-    notes = [CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle02.jpg",
-                            title="【ReleaseNote】トークルームを実装しました。",
-                            text="creation(創作中・考え中の何かしらのモノ・コト)に関して、意見を聞けるようにトークルーム機能を追加しました。",
-                            actions=[{"type": "message","label": "サイトURL","text": "https://renttle.jp/notes/kota/7"}]),
+#    notes = [CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle02.jpg",
+#                            title="【ReleaseNote】トークルームを実装しました。",
+#                            text="creation(創作中・考え中の何かしらのモノ・コト)に関して、意見を聞けるようにトークルーム機能を追加しました。",
+#                            actions=[{"type": "message","label": "サイトURL","text": "https://renttle.jp/notes/kota/7"}]),
+#
+#             CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle03.jpg",
+#                            title="ReleaseNote】創作中の活動を報告する機能を追加しました。",
+#                            text="創作中や考え中の時点の活動を共有できる機能を追加しました。",
+#                            actions=[
+#                                {"type": "message", "label": "サイトURL", "text": "https://renttle.jp/notes/kota/6"}]),
+#
+#             CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle04.jpg",
+#                            title="【ReleaseNote】タグ機能を追加しました。",
+#                            text="「イベントを作成」「記事を投稿」「本を登録」にタグ機能を追加しました。",
+#                            actions=[
+#                                {"type": "message", "label": "サイトURL", "text": "https://renttle.jp/notes/kota/5"}])]
 
-             CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle03.jpg",
-                            title="ReleaseNote】創作中の活動を報告する機能を追加しました。",
-                            text="創作中や考え中の時点の活動を共有できる機能を追加しました。",
-                            actions=[
-                                {"type": "message", "label": "サイトURL", "text": "https://renttle.jp/notes/kota/6"}]),
-
-             CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle04.jpg",
-                            title="【ReleaseNote】タグ機能を追加しました。",
-                            text="「イベントを作成」「記事を投稿」「本を登録」にタグ機能を追加しました。",
-                            actions=[
-                                {"type": "message", "label": "サイトURL", "text": "https://renttle.jp/notes/kota/5"}])]
+    note = {}
 
     messages = TemplateSendMessage(
         alt_text='template',
