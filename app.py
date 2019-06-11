@@ -8,7 +8,9 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TemplateSendMessage, CarouselTemplate, CarouselColumn)
+    MessageEvent, TextMessage, TemplateSendMessage, CarouselTemplate, CarouselColumn,
+    TextSendMessage # text message
+    )
 
 import pya3rt # CURL
 
@@ -45,8 +47,6 @@ def response_message(event):
     if event.reply_token == "00000000000000000000000000000000":
         return
 
-    print(event)
-
     # notesのCarouselColumnの各値は、変更してもらって結構です。
 #    notes = [CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle02.jpg",
 #                            title="【ReleaseNote】トークルームを実装しました。",
@@ -65,12 +65,23 @@ def response_message(event):
 #                            actions=[
 #                                {"type": "message", "label": "サイトURL", "text": "https://renttle.jp/notes/kota/5"}])]
 
-    note = {}
+    response = client.talk(event.message.text)
 
-    messages = TemplateSendMessage(
-        alt_text='template',
-        template=CarouselTemplate(columns=notes),
-    )
+    messages = TextSendMessage()
+    if response["status"] == 0:
+        text = ""
+        for result in response["results"]:
+            #text.append(result["reply"])
+            text += result["reply"]
+    
+        messages = TextSendMessage(
+            text=text
+        )
+
+    else:
+        messages = TextSendMessage(
+            text="何言ってか理解できないにゃ"
+        )
 
     line_bot_api.reply_message(event.reply_token, messages=messages)
 
