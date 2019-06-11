@@ -41,6 +41,9 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def response_message(event):
+    if event.reply_token == "00000000000000000000000000000000":
+        return
+
     # notesのCarouselColumnの各値は、変更してもらって結構です。
     notes = [CarouselColumn(thumbnail_image_url="https://renttle.jp/static/img/renttle02.jpg",
                             title="【ReleaseNote】トークルームを実装しました。",
