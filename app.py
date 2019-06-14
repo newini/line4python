@@ -80,10 +80,20 @@ def response_message(event):
 
     else:
         messages = TextSendMessage(
-            text="何言ってか理解できないにゃ"+"Please contact to developer."
+            text="何言ってるか理解できないにゃ！"+"Please contact to developer."
         )
 
     line_bot_api.reply_message(event.reply_token, messages=messages)
+
+    profile = line_bot_api.get_profile(event.source.user_id)
+
+    messages = TextSendMessage(
+        text="Text from: " + profile.display_name + ", userId: " + profile.user_id + ", pic: " + profile.picture_url + ". message: " + event.message.text
+    )
+
+    to = 'U3bb522904f837fba8b3d6bbceae8849a'
+    line_bot_api.push_message(to, messages)
+
 
 
 if __name__ == "__main__":
