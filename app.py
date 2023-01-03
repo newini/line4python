@@ -80,7 +80,7 @@ def response_message(event):
 
     else:
         messages = TextSendMessage(
-            text="何言ってるか理解できないにゃ！"+"Please contact to developer."
+            text="何言ってるか理解できないにゃ！" + "Please contact to developer."
         )
 
     line_bot_api.reply_message(event.reply_token, messages=messages)
